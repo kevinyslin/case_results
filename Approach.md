@@ -2,10 +2,10 @@
 
 ## Data Ingestion
 
-1) Check and explore provided link 
-    1.1) See if we receive a valid status code
-    1.2) Explore JSON, looking at the keys and what type of data exists in each key
-    1.3) Visualize important sections
+1) Check and explore provided link: 
+- See if we receive a valid status code
+- Explore JSON, looking at the keys and what type of data exists in each key
+- Visualize important sections
 2) Through exploration there are some main **keys** for our code:
 - data: contains the data we want to extract
 - total_pages: is the total number of pages that we can loop through
@@ -25,4 +25,5 @@
 - An invoice is considered “reconciled” if it has at least one active approved match.
 
 2) The main table created is adding a row number column, which is partitioned by invoice ID and transaction ID, and then ordered by create date.
+
 3) I use this base table for analysis in questions 1 to 3
