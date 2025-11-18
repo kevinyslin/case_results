@@ -4,7 +4,7 @@
 
 /*
 Moddified Invoice table that is using through the analysis:
-- Partitioning by invoice-transaction pairs, and ordering by the most recent pair ('Actice' Matches).
+- Partitioning by invoice-transaction pairs, and ordering by the most recent pair ('Active' Matches).
 - Creating columns to pull previous values of 2 columns: expert_type and expert_opinion.
 */
 create or replace table `Re_cap.invoices_mod` as
@@ -111,4 +111,5 @@ da36911c-7145-4c19-8e82-35c39f3a2e9c	AlgoRhythm Solutions	  98	            79	  
 c5ccae70-d802-4502-8b25-9be976292ccb	Pipeline Pioneers AG	  95	            73	                53	            20
 ed811a71-439e-4c49-bfb8-8fb407c39428	DataLake Ventures	      88	            69	                44	            25
 640cf7f1-51c7-4c74-bff4-074303a1b191	Vector Velocity Inc	    84	            69	                55	            14
+
 */
