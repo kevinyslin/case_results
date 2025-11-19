@@ -70,9 +70,9 @@ invoice_agg as (
   select
     invoice_id,
     count (case when expert_type = "system" and expert_opinion = "approved" then invoice_id end) as approved_system,
-    count (case when expert_type = "user" and expert_opinion = "approved" then invoice_id end) as approved_user,
+    count (case when expert_type = "user"   and expert_opinion = "approved" then invoice_id end) as approved_user,
     count (case when expert_type = "system" and expert_opinion = "rejected" then invoice_id end) as rejected_system,
-    count (case when expert_type = "user" and expert_opinion = "rejected" then invoice_id end) as rejected_user,
+    count (case when expert_type = "user"   and expert_opinion = "rejected" then invoice_id end) as rejected_user,
   from `Re_cap.invoices_mod`
   where rn =1
   group by 1
@@ -91,6 +91,7 @@ main as (
   left join invoice_agg as b
     on a.invoice_id = b.invoice_id
 )
+# Calculate total of invoices (by system/usre) and also the share of system/user of reconciled invoices.
 select 
   company_id,
   company_name,
@@ -98,6 +99,8 @@ select
   count (distinct case when total_reconciled > 0 then invoice_id end) as reconciled_invoices,
   count (distinct case when approved_system > 0 then invoice_id end) as invoice_system,
   count (distinct case when approved_user > 0 then invoice_id end) as invoice_user,
+  count (distinct case when approved_system > 0 then invoice_id end) * 100.0 / count (distinct case when total_reconciled > 0 then invoice_id end) as share_system,
+  count (distinct case when approved_user > 0 then invoice_id end) * 100.0 / count (distinct case when total_reconciled > 0 then invoice_id end) as share_user
 from main
 group by 1,2
 order by 4 desc
@@ -105,11 +108,10 @@ limit 5
 ;
 
 /* Results:
-company_id	                            company_name	        total_invoices	reconciled_invoices	invoice_system	invoice_user
-d66bfb15-e693-4219-9cb0-c5ecbb61a994	ETL Enterprises	        107	            92	                64	            28
-da36911c-7145-4c19-8e82-35c39f3a2e9c	AlgoRhythm Solutions	  98	            79	                56	            23
-c5ccae70-d802-4502-8b25-9be976292ccb	Pipeline Pioneers AG	  95	            73	                53	            20
-ed811a71-439e-4c49-bfb8-8fb407c39428	DataLake Ventures	      88	            69	                44	            25
-640cf7f1-51c7-4c74-bff4-074303a1b191	Vector Velocity Inc	    84	            69	                55	            14
-
+company_id	                          company_name	          total_invoices	reconciled_invoices	invoice_system	invoice_user	share_system	share_user
+d66bfb15-e693-4219-9cb0-c5ecbb61a994	ETL Enterprises	        107	            92	                64	            28  	        69.56	        30.43
+da36911c-7145-4c19-8e82-35c39f3a2e9c	AlgoRhythm Solutions	  98	            79	                56	            23  	        70.88	        29.11
+c5ccae70-d802-4502-8b25-9be976292ccb	Pipeline Pioneers AG	  95	            73	                53	            20  	        72.60         27.39
+ed811a71-439e-4c49-bfb8-8fb407c39428	DataLake Ventures	      88	            69	                44	            25	          63.76	        36.23
+640cf7f1-51c7-4c74-bff4-074303a1b191	Vector Velocity Inc	    84	            69	                55	            14	          79.71	        20.28
 */
